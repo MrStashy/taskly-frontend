@@ -1,17 +1,26 @@
 import type { Task } from "../types/Task";
 
 const TaskRepository = {
-  API: async <T>(urlSuffix: string): Promise<T | undefined> => {
+  API: async <T>(
+    method: "GET" | "POST",
+    urlSuffix: string,
+    body?: string,
+  ): Promise<T | undefined> => {
     const baseUrl = import.meta.env.VITE_TASK_SERVICE_URL!;
-
-    console.log(baseUrl);
-
     let response: Response;
 
     try {
-      response = await fetch(`${baseUrl}${urlSuffix}`);
+      response = await fetch(`${baseUrl}${urlSuffix}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: method,
+        body: body,
+      });
 
       if (!response.ok) {
+        console.log(await response.json());
+
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
@@ -22,7 +31,38 @@ const TaskRepository = {
   },
   GetAllTasks: async () => {
     const urlSuffix = "tasks/";
-    const response = await TaskRepository.API<Task[]>(urlSuffix);
+    const response = await TaskRepository.API<Task[]>("GET", urlSuffix);
+
+    if (!response) {
+      return [];
+    }
+
+    return response;
+  },
+  CreateTask: async (body: {
+    title: string;
+    description: string;
+    due_date: string;
+    status: string;
+  }) => {
+    console.log("body", body);
+    const urlSuffix = "tasks/";
+    const response = await TaskRepository.API<Task[]>(
+      "POST",
+      urlSuffix,
+      JSON.stringify(body),
+    );
+
+    if (!response) {
+      return "error";
+    }
+
+    return response;
+  },
+  GetTasksByStatus: async (status: string) => {
+    const urlSuffix = `tasks?status=${status}`;
+
+    const response = await TaskRepository.API<Task[]>("GET", urlSuffix);
 
     if (!response) {
       return [];

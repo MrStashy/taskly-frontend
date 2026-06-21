@@ -5,7 +5,7 @@ type StatusIcon = {
 export default function StatusIcon({ status }: StatusIcon) {
   if (status === "In Progress") {
     return (
-      <span className="px-8 py-2 rounded-full bg-blue-200 text-blue-700 flex gap-2">
+      <span className="px-8 w-42 justify-center font-semibold py-2 rounded-full bg-blue-200 text-blue-700 flex gap-2">
         {status}
       </span>
     );
@@ -13,7 +13,7 @@ export default function StatusIcon({ status }: StatusIcon) {
 
   if (status === "To do") {
     return (
-      <span className="px-8 py-2 rounded-full bg-yellow-200 text-yellow-700 flex gap-2">
+      <span className="px-8 py-2 font-semibold w-42 rounded-full bg-yellow-200 text-yellow-700 flex gap-2 justify-center">
         {status}
       </span>
     );
@@ -21,7 +21,7 @@ export default function StatusIcon({ status }: StatusIcon) {
 
   if (status === "Complete") {
     return (
-      <span className="px-8 py-2 rounded-full bg-green-200 text-green-700 flex gap-2">
+      <span className="px-8 py-2 w-42 rounded-full font-semibold bg-green-200 text-green-700 flex gap-2">
         <svg
           fill="none" // Standardizing to none for icon paths
           viewBox="0 0 24 24"
