@@ -4,12 +4,18 @@ import TaskRepository from "../utils/TaskRepository";
 import type { Task } from "../types/Task";
 
 type Dashboard = {
+  fetchTasks: (ignore: boolean) => Promise<void>;
   loading: boolean;
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   tasks: Task[];
 };
 
-export default function Dashboard({ loading, setTasks, tasks }: Dashboard) {
+export default function Dashboard({
+  fetchTasks,
+  loading,
+  setTasks,
+  tasks,
+}: Dashboard) {
   const [showSelection, setShowSelection] = useState(false);
 
   async function handleFilter(e: React.MouseEvent<HTMLElement>) {
@@ -18,6 +24,7 @@ export default function Dashboard({ loading, setTasks, tasks }: Dashboard) {
     const response = await TaskRepository.GetTasksByStatus(element.id);
     setTasks(response);
   }
+
   return (
     <section className="bg-brand-purple/5 px-6 py-10 min-h-80">
       <div className="flex place-items-center justify-between">
@@ -61,7 +68,7 @@ export default function Dashboard({ loading, setTasks, tasks }: Dashboard) {
           )}
         </div>
       </div>
-      <TaskList loading={loading} tasks={tasks} />
+      <TaskList fetchTasks={fetchTasks} loading={loading} tasks={tasks} />
     </section>
   );
 }

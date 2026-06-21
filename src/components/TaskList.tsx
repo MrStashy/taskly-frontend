@@ -3,15 +3,26 @@ import transformStatus from "../utils/transformStatus";
 import StatusIcon from "./StatusIcon";
 import LoadingTasks from "./LoadingTasks";
 import type { Task } from "../types/Task";
+import TaskRepository from "../utils/TaskRepository";
 
 type TaskList = {
+  fetchTasks: (ignore: boolean) => Promise<void>;
   loading: boolean;
   tasks: Task[];
 };
 
-export default function TaskList({ loading, tasks }: TaskList) {
+export default function TaskList({ fetchTasks, loading, tasks }: TaskList) {
+  async function handleDelete(id: string) {
+    await TaskRepository.DeleteTaskById(id);
+    fetchTasks(false);
+  }
+
   if (loading) {
     return <LoadingTasks />;
+  }
+
+  if (!tasks.length) {
+    return <p className="mt-10">No tasks found!</p>;
   }
   return (
     <>
@@ -78,7 +89,10 @@ export default function TaskList({ loading, tasks }: TaskList) {
                   />
                 </svg>
               </button>
-              <button className="text-red-500 group-hover:bg-red-500/10 p-2 cursor-pointer rounded-md">
+              <button
+                onClick={() => handleDelete(task.id.toString())}
+                className="text-red-500 group-hover:bg-red-500/10 p-2 cursor-pointer rounded-md"
+              >
                 <svg
                   viewBox="-0.5 0 25 25"
                   fill="none"

@@ -2,7 +2,7 @@ import type { Task } from "../types/Task";
 
 const TaskRepository = {
   API: async <T>(
-    method: "GET" | "POST",
+    method: "DELETE" | "GET" | "POST",
     urlSuffix: string,
     body?: string,
   ): Promise<T | undefined> => {
@@ -68,6 +68,12 @@ const TaskRepository = {
       return [];
     }
 
+    return response;
+  },
+  DeleteTaskById: async (id: string) => {
+    const urlSuffix = `tasks/${id}`;
+    const response = await TaskRepository.API<Task[]>("DELETE", urlSuffix);
+    console.log(response);
     return response;
   },
 };

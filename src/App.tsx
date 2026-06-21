@@ -8,30 +8,32 @@ function App() {
   const [loading, setLoading] = useTransition();
   const [tasks, setTasks] = useState<Task[]>([]);
 
+  async function fetchTasks(ignore: boolean) {
+    const data = await TaskRepository.GetAllTasks();
+    if (!ignore) {
+      setTasks(data ?? []);
+    }
+  }
+
   useEffect(() => {
     let ignore = false;
 
-    async function fetchTasks() {
-      const data = await TaskRepository.GetAllTasks();
-      if (!ignore) {
-        setTasks(data ?? []);
-      }
-    }
-
-    setLoading(() => fetchTasks());
+    setLoading(() => fetchTasks(ignore));
 
     return () => {
       ignore = true;
     };
   }, []);
 
-  if (!tasks.length) {
-    return <p>No tasks found</p>;
-  }
   return (
     <main className="p-4">
       <Header />
-      <Dashboard loading={loading} setTasks={setTasks} tasks={tasks} />
+      <Dashboard
+        fetchTasks={fetchTasks}
+        loading={loading}
+        setTasks={setTasks}
+        tasks={tasks}
+      />
     </main>
   );
 }
