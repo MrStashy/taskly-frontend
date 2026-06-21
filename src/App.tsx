@@ -27,7 +27,7 @@ function App() {
 
   return (
     <main className="p-4">
-      <Header />
+      <Header fetchTasks={fetchTasks} />
       <Dashboard
         fetchTasks={fetchTasks}
         loading={loading}

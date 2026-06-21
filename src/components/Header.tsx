@@ -1,7 +1,11 @@
 import { useRef } from "react";
 import CreateTaskModal from "./CreateTaskModal";
 
-export default function Header() {
+type Header = {
+  fetchTasks: (ignore: boolean) => Promise<void>;
+};
+
+export default function Header({ fetchTasks }: Header) {
   const modalRef = useRef<HTMLDialogElement>(null);
   return (
     <header className="h-24 px-6">
@@ -17,7 +21,7 @@ export default function Header() {
           + Create Task
         </button>
       </section>
-      <CreateTaskModal ref={modalRef} />
+      <CreateTaskModal fetchTasks={fetchTasks} ref={modalRef} />
     </header>
   );
 }

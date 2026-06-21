@@ -2,10 +2,11 @@ import { type RefObject, useState } from "react";
 import TaskRepository from "../utils/TaskRepository";
 
 type CreateTaskModal = {
+  fetchTasks: (ignore: boolean) => Promise<void>;
   ref: RefObject<HTMLDialogElement | null>;
 };
 
-export default function CreateTaskModal({ ref }: CreateTaskModal) {
+export default function CreateTaskModal({ fetchTasks, ref }: CreateTaskModal) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -29,7 +30,8 @@ export default function CreateTaskModal({ ref }: CreateTaskModal) {
       return;
     }
 
-    window.location.reload();
+    fetchTasks(false);
+    ref.current?.close();
   }
 
   return (

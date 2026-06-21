@@ -40,7 +40,7 @@ export default function Dashboard({
             Filter
           </button>
           {showSelection && (
-            <div className="absolute">
+            <div className="absolute z-99">
               <ul className="flex bg-white flex-col divide-y  border-brand-purple border rounded-sm cursor-pointer">
                 <li
                   className="p-2 hover:bg-gray-200"
