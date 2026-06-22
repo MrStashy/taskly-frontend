@@ -25,6 +25,11 @@ export default function Dashboard({
     setShowSelection(false);
     const element = e.currentTarget;
 
+    if (element.id === "clear") {
+      fetchTasks(false);
+      return;
+    }
+
     const response = await TaskRepository.GetTasksByStatus(element.id);
     setTasks(response);
   }
@@ -46,6 +51,13 @@ export default function Dashboard({
           {showSelection && (
             <div className="absolute z-99" ref={dropdownRef}>
               <ul className="flex bg-white flex-col divide-y  border-brand-purple border rounded-sm cursor-pointer">
+                <li
+                  className="p-2 hover:bg-gray-200"
+                  id="clear"
+                  onClick={(e) => handleFilter(e)}
+                >
+                  Clear
+                </li>
                 <li
                   className="p-2 hover:bg-gray-200"
                   id="to_do"
