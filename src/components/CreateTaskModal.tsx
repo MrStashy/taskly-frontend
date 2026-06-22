@@ -7,6 +7,7 @@ type CreateTaskModal = {
 };
 
 export default function CreateTaskModal({ fetchTasks, ref }: CreateTaskModal) {
+  const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -21,22 +22,25 @@ export default function CreateTaskModal({ fetchTasks, ref }: CreateTaskModal) {
       ...prevData,
       [id]: value,
     }));
+    setErrorMessage("");
   }
 
   async function handleSubmit() {
     const result = await TaskRepository.CreateTask(formData);
 
     if (result === "error") {
+      setErrorMessage("Something went wrong. Check your inputs and try again.");
       return;
     }
 
+    setErrorMessage("");
     fetchTasks(false);
     ref.current?.close();
   }
 
   return (
     <dialog
-      className="w-90 h-90 p-4 rounded-lg shadow-lg m-auto backdrop:bg-black/50 border-brand-purple border-2"
+      className="w-90 h-fit p-4 rounded-lg shadow-lg m-auto backdrop:bg-black/50 border-brand-purple border-2"
       ref={ref}
     >
       <header className="flex justify-between items-center">
@@ -113,6 +117,11 @@ export default function CreateTaskModal({ fetchTasks, ref }: CreateTaskModal) {
           >
             Submit
           </button>
+          {errorMessage && (
+            <p className="text-red-500 text-xs text-center mt-4">
+              {errorMessage}
+            </p>
+          )}
         </div>
       </form>
     </dialog>
