@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import getUkDate from "../utils/getUkDate";
 import transformStatus from "../utils/transformStatus";
 import StatusIcon from "./StatusIcon";
 import LoadingTasks from "./LoadingTasks";
 import type { Task } from "../types/Task";
 import TaskRepository from "../utils/TaskRepository";
+import { useClickOutside } from "../utils/useClickOutside";
 
 type TaskList = {
   fetchTasks: (ignore: boolean) => Promise<void>;
@@ -16,6 +17,9 @@ export default function TaskList({ fetchTasks, loading, tasks }: TaskList) {
   const [showStatusUpdateMenu, setShowStatusUpdateMenu] = useState<
     number | null
   >(null);
+  const dropdownRef = useRef(null);
+  useClickOutside(dropdownRef, () => setShowStatusUpdateMenu(null));
+
   async function handleDelete(id: string) {
     await TaskRepository.DeleteTaskById(id);
     fetchTasks(false);
@@ -80,7 +84,10 @@ export default function TaskList({ fetchTasks, loading, tasks }: TaskList) {
                   className="text-brand-purple group-hover:bg-brand-purple/10 p-2 cursor-pointer rounded-md"
                 >
                   {showStatusUpdateMenu === index && (
-                    <div className="absolute top-10 w-30 text-black z-99">
+                    <div
+                      ref={dropdownRef}
+                      className="absolute top-10 w-30 text-black z-99"
+                    >
                       <ul className="flex bg-white flex-col divide-y  border-brand-purple border rounded-sm cursor-pointer">
                         <li
                           className="p-2 hover:bg-gray-200"

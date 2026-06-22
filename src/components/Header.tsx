@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import CreateTaskModal from "./CreateTaskModal";
+import { useClickOutside } from "../utils/useClickOutside";
 
 type Header = {
   fetchTasks: (ignore: boolean) => Promise<void>;
@@ -7,6 +8,9 @@ type Header = {
 
 export default function Header({ fetchTasks }: Header) {
   const modalRef = useRef<HTMLDialogElement>(null);
+
+  useClickOutside(modalRef, () => modalRef.current?.close());
+
   return (
     <header className="h-24 px-6">
       <section className="flex place-items-center justify-between">

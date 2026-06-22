@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import TaskList from "./TaskList";
 import TaskRepository from "../utils/TaskRepository";
+import { useClickOutside } from "../utils/useClickOutside";
 import type { Task } from "../types/Task";
 
 type Dashboard = {
@@ -17,8 +18,11 @@ export default function Dashboard({
   tasks,
 }: Dashboard) {
   const [showSelection, setShowSelection] = useState(false);
+  const dropdownRef = useRef(null);
+  useClickOutside(dropdownRef, () => setShowSelection(false));
 
   async function handleFilter(e: React.MouseEvent<HTMLElement>) {
+    setShowSelection(false);
     const element = e.currentTarget;
 
     const response = await TaskRepository.GetTasksByStatus(element.id);
@@ -40,7 +44,7 @@ export default function Dashboard({
             Filter
           </button>
           {showSelection && (
-            <div className="absolute z-99">
+            <div className="absolute z-99" ref={dropdownRef}>
               <ul className="flex bg-white flex-col divide-y  border-brand-purple border rounded-sm cursor-pointer">
                 <li
                   className="p-2 hover:bg-gray-200"
